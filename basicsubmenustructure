@@ -34,7 +34,7 @@ function display_outputsubmenu1(){
 	local w=${2-41} 		# box width default 41
 	local t=${3-Output} 	# box title 
     #$DIALOG --clear --title "TEXT BOX" "$@" --textbox "$OUTPUTSUBMENU1" 22 77
-    $DIALOG --clear --backtitle "Linux sub menu " --title "Output of ${t}"   --textbox "$OUTPUTSUBMENU1" ${h} ${w}
+    $DIALOG --clear --backtitle "Linux sub menu " --title "func display_outputsubmenu1 Output of ${t}"   --textbox "$OUTPUTSUBMENU1" ${h} ${w}
 
 	#dialog --backtitle "Linux sub menu " --title "${t}" --clear --msgbox "$(<$OUTPUTSUBMENU1)" ${h} ${w}
 }
@@ -47,25 +47,36 @@ function show_date(){
     display_output 6 60 "Date and Time"
 }
 function do_ls(){
-	echo "output  of ls -al gives $(ls -al)." >$OUTPUTSUBMENU1
-    display_outputsubmenu1 20 70  "ls -al"
+    #echo "output  cmd=$CMD of ${t} ls -al gives ${ls}". >$OUTPUTSUBMENU1
+    echo "`eval "$CMD"`" >$OUTPUTSUBMENU1  # THIS WORKS ALSO
+	#echo $(ls -la) >$OUTPUTSUBMENU1
+	#echo output  of ${t} gives ${ls}. >$OUTPUTSUBMENU1
+    #echo "output  of ls -al gives $(ls)." >$OUTPUTSUBMENU1
+	#echo "$(ls)" >$OUTPUTSUBMENU1    # THIS WORKS
+	
+	#echo "output  of ${t3} gives `eval ${t3}`" >$OUTPUTSUBMENU1
+	
+	display_outputsubmenu1 20 70  "ls -al"
 	}
 ########################################
 # Purpose - display submenu linux
 ########################################
 function show_linux_submenu(){
 	### display main menu ###
+	#ls "show output of ls command" \
+	#df "show output of df command" \
+	
 	dialog --clear  --help-button --backtitle "Linux sub menu" \
 	--title "[ SUB - M E N U ]" \
 	--menu "You can use the UP/DOWN arrow keys, the first \n\
 	Choose the TASK" 15 50 4 \
-	ls "show output of ls command" \
-	df "show output of df command" \
-		Exit "Exit to the shell" 2>"${INPUTSUBMENU1}"
+	ls "ls -la" \
+	df "df" \
+	Exit "Exit to the shell" 2>"${INPUTSUBMENU1}"
     menuitem=$(<"${INPUTSUBMENU1}")
     # make decsion 
 	case $menuitem in
-		ls) do_ls;;
+		ls) CMD="ls -al";do_ls;;
 		df) do_ls;;
 		Exit) echo "Bye"; break;;
 	esac
